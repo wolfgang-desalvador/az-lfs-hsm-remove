@@ -3,7 +3,7 @@ import os
 from azure.identity import DefaultAzureCredential
 from azure.storage.blob import BlobServiceClient
 
-from .utilities import loadConfiguration, checkFileStatus
+from .utilities import loadConfiguration, checkFileStatus, get_relative_path
 
 
 class LFSBlobClient(BlobServiceClient):
@@ -16,5 +16,5 @@ class LFSBlobClient(BlobServiceClient):
     def lfs_hsm_remove(self, filePath):
         absolutePath = os.path.abspath(filePath)
         if checkFileStatus(absolutePath):
-            client = self.get_blob_client(container=self.containerName, blob=absolutePath)
+            client = self.get_blob_client(container=self.containerName, blob=get_relative_path(absolutePath))
             client.delete_blob()
