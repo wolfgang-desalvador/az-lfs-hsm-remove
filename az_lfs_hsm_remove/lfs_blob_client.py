@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 from azure.identity import DefaultAzureCredential
 from azure.storage.blob import BlobServiceClient
@@ -18,3 +19,4 @@ class LFSBlobClient(BlobServiceClient):
         if checkFileStatus(absolutePath):
             client = self.get_blob_client(container=self.containerName, blob=get_relative_path(absolutePath))
             client.delete_blob()
+            subprocess.check_output(["lfs", "hsm_set", "--lost", absolutePath])
