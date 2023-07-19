@@ -8,7 +8,7 @@ def loadConfiguration(file):
     return configuration
 
 def checkFileStatus(filePath):
-    fileStatus = subprocess.check_output(["lfs hsm_state", filePath])
+    fileStatus = subprocess.check_output(["lfs", "hsm_state", filePath])
     logger = logging.getLogger()
     if 'released' in fileStatus:
         logger.error('The file is not restored to Lustre and cannot be removed from backend. Please release the file before.')
