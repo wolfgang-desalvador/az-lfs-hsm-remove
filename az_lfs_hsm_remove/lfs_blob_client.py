@@ -3,7 +3,7 @@ import os
 from azure.identity import DefaultAzureCredential
 from azure.storage.blob import BlobServiceClient
 
-from utilities import loadConfiguration, checkFileStatus
+from .utilities import loadConfiguration, checkFileStatus
 
 
 class LFSBlobClient(BlobServiceClient):

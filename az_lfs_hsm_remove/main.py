@@ -1,7 +1,7 @@
 import sys
 import os
 
-from lfs_blob_client import LFSBlobClient
+from .lfs_blob_client import LFSBlobClient
 
 def main():
     fileToRemove = sys.argv[-1]
