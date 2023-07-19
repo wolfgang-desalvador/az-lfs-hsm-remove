@@ -9,13 +9,17 @@ def loadConfiguration(file):
     return configuration
 
 def checkFileStatus(filePath):
-    fileStatus = str(subprocess.check_output(["lfs", "hsm_state", filePath]))
     logger = logging.getLogger()
+    try:
+        fileStatus = str(subprocess.check_output(["lfs", "hsm_state", filePath]))
+    except subprocess.CalledProcessError as error:
+        logger.error('LFS command failed with error {}. Are you sure you are running the utility on a Lustre mount?'.format(str(error)))
+
     if 'released' in fileStatus:
-        logger.error('The file is not restored to Lustre and cannot be removed from backend. Please release the file before.')
+        logger.error('The file is not restored to Lustre and cannot be removed from backend. Please restore the file to Lustre before.')
         return False
     elif 'archived' not in fileStatus:
-        logger.error('The file does not appear to be in the backend.')
+        logger.error('The file does not appear to be in the backend according to lfs hsm_state.')
         return False
     else:
         return True

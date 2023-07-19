@@ -11,7 +11,7 @@ class LFSBlobClient(BlobServiceClient):
         configuration = loadConfiguration(configurationFile)
         self.accountURL = configuration.get('accountURL')
         self.containerName = configuration.get('containerName')
-        super().__init__(self.accountURL, credential=DefaultAzureCredential(), **kwargs)
+        super().__init__(self.accountURL, credential=DefaultAzureCredential(exclude_workload_identity_credential=False, exclude_environment_credential=False), **kwargs)
 
     def lfs_hsm_remove(self, filePath):
         absolutePath = os.path.abspath(filePath)
