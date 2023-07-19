@@ -9,7 +9,7 @@ def main():
     logger = logging.getLogger()
 
     if os.path.isdir(fileToRemove):
-        logger.error('HSM operates on folders, not on files. The input path refers to a folder.')
+        logger.error('HSM operates on files, not on folders. The input path refers to a folder.')
     elif os.path.exists(fileToRemove):
         LFSBlobClient().lfs_hsm_remove(fileToRemove)
     else:
