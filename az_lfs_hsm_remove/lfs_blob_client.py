@@ -20,3 +20,4 @@ class LFSBlobClient(BlobServiceClient):
             client = self.get_blob_client(container=self.containerName, blob=get_relative_path(absolutePath))
             client.delete_blob()
             subprocess.check_output(["lfs", "hsm_set", "--lost", absolutePath])
+            subprocess.check_output(["lfs", "hsm_set", "--dirty", absolutePath])
