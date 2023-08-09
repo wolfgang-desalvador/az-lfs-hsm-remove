@@ -16,7 +16,7 @@ class LFSBlobClient(BlobServiceClient):
 
     def lfs_hsm_remove(self, filePath, force=False):
         absolutePath = os.path.abspath(filePath)
-        if checkFileStatus(absolutePath) or force:
+        if force or checkFileStatus(absolutePath):
             client = self.get_blob_client(container=self.containerName, blob=get_relative_path(absolutePath))
             client.delete_blob()
             subprocess.check_output(["lfs", "hsm_set", "--lost", absolutePath])
