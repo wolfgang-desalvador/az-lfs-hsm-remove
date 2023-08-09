@@ -6,11 +6,11 @@ import argparse
 from .lfs_blob_client import LFSBlobClient
 
 def main():
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(prog='Azure LFS HSM Remove', description='This utility helps managing removed files from Azure Blob Lustre HSMbackend.')
 
-    parser.add_argument('-f', "--force", default=False, required=False, help="This forces removal from Blob Storage independently from the HSM status. Use carefully.")     
+    parser.add_argument('-f', "--force", default=False, required=False, action='store_true', help="This forces removal from Blob Storage independently from the HSM status. Use carefully.")     
 
-    args, extras = parser.parse_known_intermixed_args()
+    args, extras = parser.parse_known_args()
     
     logger = logging.getLogger()
 
