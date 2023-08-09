@@ -22,11 +22,19 @@ class LFSBlobClient(BlobServiceClient):
             try:
                 client = self.get_blob_client(container=self.containerName, blob=get_relative_path(absolutePath))
                 client.delete_blob()
-            except ResourceNotFoundError:
+            except ResourceNotFoundError as error:
                 logger = logging.getLogger()
                 if force:
                     logger.info("Data seems not to be anymore on the HSM backend.")
                 else:
                     logger.error("Data seems not to be anymore on the HSM backend even if hsm_state expects it to be there.")
-            subprocess.check_output(["lfs", "hsm_set", "--lost", absolutePath])
-            subprocess.check_output(["lfs", "hsm_set", "--dirty", absolutePath])
+                    raise error
+            try:
+                subprocess.check_output(["lfs", "hsm_set", "--lost", absolutePath])
+                subprocess.check_output(["lfs", "hsm_set", "--dirty", absolutePath])
+            except subprocess.CalledProcessError:
+                if force:
+                    pass
+                else:
+                    logger.error("Failed in setting hsm_state correctly. Please check the file status.")
+                    raise error
