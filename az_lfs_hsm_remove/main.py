@@ -15,7 +15,7 @@ def main():
     logger = logging.getLogger()
 
     if not extras:
-        logger.error('HSM operates on files, not on folders. The input path refers to a folder.')
+        logger.error('No filename specified.')
         sys.exit(1)
 
     fileToRemove = extras[-1]
@@ -23,7 +23,7 @@ def main():
 
     if os.path.isdir(fileToRemove):
         logger.error('HSM operates on files, not on folders. The input path refers to a folder.')
-    elif os.path.exists(fileToRemove):
+    elif args.force or os.path.exists(fileToRemove):
         LFSBlobClient().lfs_hsm_remove(fileToRemove, args.force)
     else:
         logger.error('The file provided does not exist on the system')
