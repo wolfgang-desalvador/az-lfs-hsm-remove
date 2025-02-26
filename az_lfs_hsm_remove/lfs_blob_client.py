@@ -18,12 +18,21 @@ class LFSBlobClient(BlobServiceClient):
 
     def lfs_hsm_remove(self, filePath, force=False):
         absolutePath = os.path.abspath(filePath)
-        if force or checkFileStatus(absolutePath):
+        logger = logging.getLogger()
+
+        ### In case path is available on the filesystem, now use hsm_remove standard command since supported
+        if os.path.exists(absolutePath):
+            if checkFileStatus(absolutePath):
+                try:
+                    subprocess.check_output(["lfs", "hsm_remove", absolutePath])
+                except subprocess.CalledProcessError as error:
+                    logger.error(f"Failed in removing file {absolutePath}.")
+                    raise error
+        elif force:
             try:
                 client = self.get_blob_client(container=self.containerName, blob=get_relative_path(absolutePath))
                 client.delete_blob()
-            except ResourceNotFoundError as error:
-                logger = logging.getLogger()
+            except ResourceNotFoundError as error:             
                 if force:
                     logger.info("Data seems not to be anymore on the HSM backend.")
                 else:
